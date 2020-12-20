@@ -23,7 +23,7 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends AuthenticatingFilter {
 
-//    注入工具类
+    //    注入工具类
     @Autowired
     JwtUtils jwtUtils;
 
@@ -33,25 +33,27 @@ public class JwtFilter extends AuthenticatingFilter {
 //        强转
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt = request.getHeader("Authorization");
-        if(StringUtils.isEmpty(jwt)) {
+        if (StringUtils.isEmpty(jwt)) {
             return null;
         }
 //封装成token
         return new JwtToken(jwt);
     }
 
+
+    //    登录拦截
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt = request.getHeader("Authorization");
-        if(StringUtils.isEmpty(jwt)) {
+        if (StringUtils.isEmpty(jwt)) {
             return true;
         } else {
 
             // 校验jwt
             Claims claim = jwtUtils.getClaimByToken(jwt);
-            if(claim == null || jwtUtils.isTokenExpired(claim.getExpiration())) {
+            if (claim == null || jwtUtils.isTokenExpired(claim.getExpiration())) {
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
@@ -60,9 +62,11 @@ public class JwtFilter extends AuthenticatingFilter {
         }
     }
 
+
+    //    抛出数据，告诉前端出现了异常  重写这个方法，其他方法出现异常会调用这个方法
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-
+//        强转
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
 
         Throwable throwable = e.getCause() == null ? e : e.getCause();
@@ -70,6 +74,7 @@ public class JwtFilter extends AuthenticatingFilter {
         String json = JSONUtil.toJsonStr(result);
 
         try {
+//            打印json
             httpServletResponse.getWriter().print(json);
         } catch (IOException ioException) {
 
@@ -77,6 +82,8 @@ public class JwtFilter extends AuthenticatingFilter {
         return false;
     }
 
+
+    //    解决跨域问题
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 

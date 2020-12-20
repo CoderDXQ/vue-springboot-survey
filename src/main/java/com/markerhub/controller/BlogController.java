@@ -34,6 +34,7 @@ public class BlogController {
     @GetMapping("/blogs")
     public Result list(@RequestParam(defaultValue = "1") Integer currentPage) {
 
+//        设置每页5个
         Page page = new Page(currentPage, 5);
         IPage pageData = blogService.page(page, new QueryWrapper<Blog>().orderByDesc("created"));
 
@@ -69,7 +70,9 @@ public class BlogController {
             temp.setStatus(0);
         }
 
+//        忽略字段
         BeanUtil.copyProperties(blog, temp, "id", "userId", "created", "status");
+//        保存
         blogService.saveOrUpdate(temp);
 
         return Result.succ(null);

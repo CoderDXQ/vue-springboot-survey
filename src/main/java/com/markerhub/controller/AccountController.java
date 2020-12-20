@@ -33,9 +33,10 @@ public class AccountController {
     public Result login(@Validated @RequestBody LoginDto loginDto, HttpServletResponse response) {
 
         User user = userService.getOne(new QueryWrapper<User>().eq("username", loginDto.getUsername()));
+//        断言
         Assert.notNull(user, "用户不存在");
 
-        if(!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))){
+        if (!user.getPassword().equals(SecureUtil.md5(loginDto.getPassword()))) {
             return Result.fail("密码不正确");
         }
         String jwt = jwtUtils.generateToken(user.getId());
@@ -55,6 +56,7 @@ public class AccountController {
     @RequiresAuthentication
     @GetMapping("/logout")
     public Result logout() {
+//        调用shiro的退出方法
         SecurityUtils.getSubject().logout();
         return Result.succ(null);
     }
