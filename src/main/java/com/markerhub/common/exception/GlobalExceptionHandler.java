@@ -39,6 +39,7 @@ public class GlobalExceptionHandler {
         return Result.fail(e.getMessage());
     }
 
+//    运行时异常
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = RuntimeException.class)
     public Result handler(RuntimeException e) {

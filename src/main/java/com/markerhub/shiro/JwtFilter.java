@@ -23,6 +23,7 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends AuthenticatingFilter {
 
+//    注入工具类
     @Autowired
     JwtUtils jwtUtils;
 
@@ -54,7 +55,7 @@ public class JwtFilter extends AuthenticatingFilter {
                 throw new ExpiredCredentialsException("token已失效，请重新登录");
             }
 
-            // 执行登录
+            // 验证通过执行登录 这个方法是从父类继承的
             return executeLogin(servletRequest, servletResponse);
         }
     }
@@ -81,6 +82,7 @@ public class JwtFilter extends AuthenticatingFilter {
 
         HttpServletRequest httpServletRequest = WebUtils.toHttp(request);
         HttpServletResponse httpServletResponse = WebUtils.toHttp(response);
+//        设置返回的Header，部分信息从request获取
         httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
         httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
         httpServletResponse.setHeader("Access-Control-Allow-Headers", httpServletRequest.getHeader("Access-Control-Request-Headers"));

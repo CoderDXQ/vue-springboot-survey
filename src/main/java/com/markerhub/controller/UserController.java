@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 /**
  * <p>
- *  前端控制器
+ * 前端控制器
  * </p>
  *
  * @author 关注公众号：MarkerHub
@@ -24,14 +24,22 @@ public class UserController {
     @Autowired
     UserService userService;
 
-//    @RequiresAuthentication
-    @GetMapping("/index")
-    public Object index() {
+////    @RequiresAuthentication
+//    @GetMapping("/index")
+//    public Object index() {
+//
+//        return userService.getById(1L);
+//        //User user = userService.getById(1L);
+//       // return Result.succ(user);
+//    }
 
-        return userService.getById(1L);
-        //User user = userService.getById(1L);
-       // return Result.succ(user);
+    @RequiresAuthentication
+    @GetMapping("/index")
+    public Result index() {
+        User user = userService.getById(1L);
+        return Result.succ(user);
     }
+
 
     @PostMapping("/save")
     public Result save(@Validated @RequestBody User user) {
